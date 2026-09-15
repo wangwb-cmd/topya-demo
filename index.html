@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Topya 离线版首页引导好评原型</title>
+  <style>
+    :root{
+      --navy:#161f3d;
+      --navy-2:#202d54;
+      --blue:#22b8e8;
+      --blue-soft:#eafaff;
+      --yellow:#ffd54b;
+      --yellow-2:#ffb92f;
+      --white:#fff;
+      --ink:#18213d;
+      --muted:#7d88a6;
+      --line:#e8edf5;
+      --shadow:0 24px 70px rgba(14,23,49,.28);
+      --phone-w:390px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;color:var(--ink)}
+    button,a{font:inherit;-webkit-tap-highlight-color:transparent}
+    button{border:0;cursor:pointer}
+    body{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:28px 18px;
+      background:
+        radial-gradient(circle at 12% 10%,rgba(39,187,232,.22),transparent 28%),
+        radial-gradient(circle at 88% 84%,rgba(255,213,75,.19),transparent 30%),
+        linear-gradient(145deg,#0d1530,#1c2950 58%,#12203e);
+    }
+    .demo-shell{display:flex;align-items:center;gap:34px;max-width:940px;width:100%;justify-content:center}
+    .demo-notes{width:310px;color:#fff}
+    .eyebrow{margin:0 0 10px;color:#70d8f7;font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+    .demo-notes h1{font-size:30px;line-height:1.08;margin:0 0 14px;letter-spacing:-.8px}
+    .demo-notes>p{margin:0;color:#b9c5df;line-height:1.65;font-size:14px}
+    .flow-card{margin-top:24px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px)}
+    .flow-card strong{font-size:13px}
+    .flow-card ol{margin:12px 0 0;padding-left:20px;color:#dce4f5;font-size:13px;line-height:1.8}
+    .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+    .legend span{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.09);font-size:11px;color:#cdd8ee}
+    .reset-demo{margin-top:18px;border-radius:12px;background:var(--yellow);color:#463500;font-weight:900;padding:11px 16px;box-shadow:0 8px 18px rgba(255,199,39,.2)}
+    .reset-demo:hover{transform:translateY(-1px)}
+
+    .phone{
+      position:relative;
+      width:var(--phone-w);
+      height:min(844px,calc(100vh - 40px));
+      min-height:650px;
+      overflow:hidden;
+      border:8px solid #080d20;
+      border-radius:38px;
+      background:#f7f9fd;
+      box-shadow:var(--shadow),inset 0 0 0 1px rgba(255,255,255,.2);
+    }
+    .phone::before{content:"";position:absolute;z-index:50;left:50%;top:8px;transform:translateX(-50%);width:108px;height:24px;background:#080d20;border-radius:0 0 15px 15px;pointer-events:none}
+    .screen{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;background:#f7f9fd;padding-bottom:86px}
+    .screen::-webkit-scrollbar{display:none}
+    .topbar{
+      position:sticky;z-index:6;top:0;height:85px;padding:31px 20px 12px;
+      display:flex;align-items:center;justify-content:space-between;
+      color:#fff;background:linear-gradient(135deg,#172341,#26365e);
+      box-shadow:0 5px 18px rgba(19,29,56,.2);
+    }
+    .brand{display:flex;align-items:center;gap:9px;font-weight:1000;font-size:22px;letter-spacing:-.6px}
+    .brand-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:11px;background:linear-gradient(145deg,var(--yellow),#ffac27);color:#18213d;font-weight:1000;transform:rotate(-5deg);box-shadow:0 5px 12px rgba(255,192,45,.25)}
+    .top-actions{display:flex;align-items:center;gap:8px}
+    .offline-badge{display:flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.1);font-size:10px;font-weight:900;color:#dfe7f7}
+    .offline-badge i{width:6px;height:6px;border-radius:50%;background:#75df9b;box-shadow:0 0 0 3px rgba(117,223,155,.14)}
+    .avatar{width:31px;height:31px;border-radius:50%;border:2px solid rgba(255,255,255,.34);background:linear-gradient(145deg,#39c0ec,#2577bd);color:#fff;font-weight:900}
+    .home{padding:17px 16px 0}
+    .section-title{display:flex;align-items:flex-end;justify-content:space-between;margin:23px 2px 12px}
+    .section-title h2{font-size:19px;margin:0;letter-spacing:-.35px}.section-title span{font-size:11px;color:var(--muted)}
+    .recent{display:flex;gap:10px;overflow:hidden}
+    .recent-card{flex:1;min-width:0;display:flex;gap:9px;align-items:center;text-align:left;padding:9px;border-radius:14px;background:#fff;box-shadow:0 6px 16px rgba(28,43,77,.08)}
+    .recent-art{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:23px;color:#fff;flex:none}
+    .recent-art.one{background:linear-gradient(145deg,#ffbd42,#ff6f61)}.recent-art.two{background:linear-gradient(145deg,#44d1ef,#4778e8)}
+    .recent-copy{min-width:0}.recent-copy b,.recent-copy small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.recent-copy b{font-size:12px}.recent-copy small{font-size:9px;color:var(--muted);margin-top:4px}
+    .games{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .game-card{position:relative;overflow:hidden;height:164px;border-radius:16px;text-align:left;padding:0;background:#26314f;color:#fff;box-shadow:0 7px 17px rgba(23,35,67,.16);transition:.18s ease}
+    .game-card:active{transform:scale(.975)}
+    .game-art{position:absolute;inset:0 0 38px;display:grid;place-items:center;font-size:48px;isolation:isolate}
+    .game-art::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(11,16,35,.34));z-index:-1}
+    .art-puzzle{background:linear-gradient(145deg,#ffd453,#f27752)}
+    .art-tiles{background:linear-gradient(145deg,#5ad7cf,#3558c7)}
+    .art-zoo{background:linear-gradient(145deg,#8de27e,#32a977)}
+    .art-word{background:linear-gradient(145deg,#ac7cf0,#6045bd)}
+    .favorite{position:absolute;z-index:2;right:8px;top:8px;width:30px;height:30px;border-radius:50%;background:rgba(20,29,56,.72);color:#fff;font-size:18px}
+    .download{position:absolute;z-index:2;right:8px;bottom:44px;width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:rgba(20,29,56,.75);font-size:13px}
+    .game-name{position:absolute;left:11px;right:38px;bottom:11px;font-size:13px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .quick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+    .quick-card{min-height:96px;border-radius:16px;padding:13px;text-align:left;color:#fff;background:linear-gradient(145deg,#28bce8,#4779d0);box-shadow:0 7px 16px rgba(35,102,175,.17)}
+    .quick-card.community{background:linear-gradient(145deg,#253152,#17213f)}
+    .quick-card b{display:block;font-size:14px;line-height:1.1;max-width:115px}.quick-card span{display:flex;align-items:center;justify-content:space-between;margin-top:22px;font-size:19px;color:var(--yellow)}
+    .bottom-nav{position:absolute;z-index:10;left:0;right:0;bottom:0;height:69px;padding:8px 30px 10px;display:flex;justify-content:space-between;background:rgba(255,255,255,.96);border-top:1px solid var(--line);backdrop-filter:blur(12px)}
+    .nav-item{display:grid;place-items:center;gap:2px;background:transparent;color:#9aa4bd;font-size:9px;font-weight:800;min-width:58px}
+    .nav-icon{font-size:22px;line-height:1}.nav-item.active{color:#20b7e6}.nav-item.active .nav-icon{filter:drop-shadow(0 4px 5px rgba(32,183,230,.25))}
+
+    .scrim{position:absolute;z-index:30;inset:0;display:grid;place-items:center;padding:22px;background:rgba(8,14,32,.72);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.22s ease}
+    .scrim.show{opacity:1;visibility:visible}
+    .rating-modal{position:relative;width:100%;max-width:332px;border-radius:27px;background:linear-gradient(180deg,#edfbff 0,#fff 43%);box-shadow:0 25px 60px rgba(0,0,0,.35);padding:26px 22px 22px;text-align:center;transform:translateY(16px) scale(.97);transition:.25s cubic-bezier(.2,.8,.2,1)}
+    .scrim.show .rating-modal{transform:translateY(0) scale(1)}
+    .modal-close{position:absolute;right:13px;top:13px;width:32px;height:32px;border-radius:50%;background:#fff;color:#8390aa;font-size:21px;box-shadow:0 3px 9px rgba(30,45,77,.09)}
+    .modal-art{position:relative;margin:2px auto 16px;width:78px;height:78px;display:grid;place-items:center;border-radius:24px;background:linear-gradient(145deg,#32c8ef,#4d89e7);box-shadow:0 11px 22px rgba(44,153,220,.28);font-size:38px;transform:rotate(-3deg)}
+    .modal-art::after{content:"";position:absolute;right:-6px;top:-8px;width:27px;height:27px;border-radius:50%;background:var(--yellow);box-shadow:0 3px 8px rgba(162,110,0,.2)}
+    .modal-art::before{content:"★";position:absolute;right:0;top:-5px;z-index:2;color:#3a3b48;font-size:15px}
+    .rating-modal h2{margin:0;font-size:23px;line-height:1.14;letter-spacing:-.45px}.rating-modal .subtitle{margin:8px auto 0;color:var(--muted);font-size:12px;line-height:1.55;max-width:250px}
+    .stars{display:flex;justify-content:center;gap:7px;margin:22px -4px 12px}
+    .star{width:45px;height:45px;background:transparent;color:#d7ddea;font-size:39px;line-height:1;filter:drop-shadow(0 3px 3px rgba(29,42,70,.08));transition:.15s ease}
+    .star.active{color:var(--yellow);transform:translateY(-2px) scale(1.06);filter:drop-shadow(0 4px 5px rgba(255,184,38,.34))}
+    .rating-hint{height:18px;margin:0 0 13px;color:#6a7895;font-size:11px;font-weight:800}
+    .primary-btn,.secondary-btn,.link-btn{width:100%;min-height:47px;border-radius:14px;font-weight:1000;font-size:14px}
+    .primary-btn{background:linear-gradient(180deg,var(--yellow),var(--yellow-2));color:#493600;box-shadow:0 8px 16px rgba(255,181,37,.23)}
+    .primary-btn:disabled{background:#e9edf4;color:#aab3c5;box-shadow:none;cursor:not-allowed}
+    .secondary-btn{margin-top:9px;background:#f2f5f9;color:#6d7891}
+    .link-btn{display:flex;align-items:center;justify-content:center;text-decoration:none;background:linear-gradient(180deg,var(--yellow),var(--yellow-2));color:#493600;box-shadow:0 8px 16px rgba(255,181,37,.23)}
+    .guide-icon{margin:0 auto 17px;width:80px;height:80px;border-radius:25px;display:grid;place-items:center;color:#fff;font-size:37px;box-shadow:0 11px 22px rgba(31,151,215,.25)}
+    .guide-icon.telegram{background:linear-gradient(145deg,#36c5f0,#2498dd)}
+    .guide-icon.store{background:linear-gradient(145deg,#273454,#17213e)}
+    .paper-plane{display:block;transform:translate(-1px,1px) rotate(-12deg)}
+    .store-mark{width:0;height:0;border-top:22px solid transparent;border-bottom:22px solid transparent;border-left:37px solid #fff;filter:drop-shadow(0 2px 2px rgba(0,0,0,.14));transform:translateX(4px)}
+    .guide-note{margin:18px 0 17px;padding:11px 12px;border-radius:12px;background:#f5f8fc;color:#69758e;font-size:11px;line-height:1.45;text-align:left}
+    .selected-score{display:inline-flex;align-items:center;gap:5px;margin-top:13px;padding:6px 10px;border-radius:999px;background:#fff5cc;color:#8a6811;font-size:11px;font-weight:900}
+    .state{display:none}.state.active{display:block;animation:fadeIn .22s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+    .launch-screen{position:absolute;z-index:25;inset:0;display:grid;place-items:center;text-align:center;color:#fff;background:linear-gradient(145deg,#182441,#26365f);opacity:0;visibility:hidden;transition:.24s ease}
+    .launch-screen.show{opacity:1;visibility:visible}
+    .launch-screen .game-badge{width:108px;height:108px;border-radius:30px;display:grid;place-items:center;margin:0 auto 18px;background:linear-gradient(145deg,#ffd453,#f27752);font-size:55px;box-shadow:0 15px 32px rgba(0,0,0,.25)}
+    .launch-screen h2{margin:0;font-size:25px}.launch-screen p{margin:8px 0 21px;color:#bdcae0;font-size:12px}.launch-screen button{padding:11px 18px;border-radius:12px;background:var(--yellow);font-weight:900;color:#493600}
+    .toast{position:absolute;z-index:60;left:50%;bottom:82px;max-width:310px;transform:translate(-50%,20px);padding:10px 15px;border-radius:999px;background:#121a31;color:#fff;font-size:11px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;visibility:hidden;transition:.2s ease;text-align:center;white-space:nowrap}
+    .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+    .tap-cue{position:absolute;z-index:12;right:28px;top:392px;padding:7px 10px;border-radius:999px;color:#fff;background:#ef6e69;font-size:10px;font-weight:900;box-shadow:0 5px 14px rgba(224,67,62,.26);animation:bob 1.3s ease-in-out infinite;pointer-events:none}
+    .tap-cue::after{content:"";position:absolute;left:16px;bottom:-6px;border:6px solid transparent;border-top-color:#ef6e69;border-bottom:0}
+    @keyframes bob{50%{transform:translateY(-5px)}}
+    @media(max-width:790px){body{padding:0;background:#080d20}.demo-shell{display:block}.demo-notes{display:none}.phone{width:100vw;height:100vh;min-height:0;border:0;border-radius:0}.phone::before{display:none}.topbar{padding-top:max(18px,env(safe-area-inset-top));height:auto;min-height:69px}}
+    @media(max-height:720px) and (min-width:791px){body{padding:10px}.phone{height:700px}.demo-notes{transform:scale(.92);transform-origin:right center}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="demo-shell">
+    <aside class="demo-notes" aria-label="原型说明">
+      <p class="eyebrow">Interactive prototype</p>
+      <h1>首页引导好评</h1>
+      <p>点击首页任意游戏，体验评分触发及 1–4 星、5 星两条分流。</p>
+      <div class="flow-card">
+        <strong>演示路径</strong>
+        <ol>
+          <li>点击游戏卡片</li>
+          <li>选择 1–5 星并提交</li>
+          <li>低分去 Telegram，高分去商店</li>
+          <li>关闭后继续启动游戏</li>
+        </ol>
+        <div class="legend"><span>1–4 ★ Telegram</span><span>5 ★ Google Play</span></div>
+      </div>
+      <button class="reset-demo" type="button" onclick="resetDemo()">Reset demo</button>
+    </aside>
+
+    <section class="phone" aria-label="Topya 离线版手机原型">
+      <div class="screen" id="homeScreen">
+        <header class="topbar">
+          <div class="brand"><span class="brand-mark">T</span><span>Topya!</span></div>
+          <div class="top-actions"><span class="offline-badge"><i></i> OFFLINE</span><button class="avatar" type="button" aria-label="Settings">T</button></div>
+        </header>
+        <div class="home">
+          <div class="section-title"><h2>Recent</h2><span>Ready to play</span></div>
+          <section class="recent">
+            <button class="recent-card game-trigger" type="button" data-game="Blocky Blast"><span class="recent-art one">▦</span><span class="recent-copy"><b>Blocky Blast</b><small>Last played · 8 min</small></span></button>
+            <button class="recent-card game-trigger" type="button" data-game="Merge Zoo"><span class="recent-art two">🐼</span><span class="recent-copy"><b>Merge Zoo</b><small>Last played · 4 min</small></span></button>
+          </section>
+
+          <div class="section-title"><h2>All Games</h2><span>12 games</span></div>
+          <section class="games">
+            <button class="game-card game-trigger" type="button" data-game="Blocky Blast"><span class="favorite">☆</span><span class="game-art art-puzzle">▦</span><span class="download">▶</span><span class="game-name">Blocky Blast</span></button>
+            <button class="game-card game-trigger" type="button" data-game="Tiles Master"><span class="favorite">★</span><span class="game-art art-tiles">◆</span><span class="download">▶</span><span class="game-name">Tiles Master</span></button>
+            <button class="game-card game-trigger" type="button" data-game="Merge Zoo"><span class="favorite">☆</span><span class="game-art art-zoo">🐼</span><span class="download">▶</span><span class="game-name">Merge Zoo</span></button>
+            <button class="game-card game-trigger" type="button" data-game="Word Clash"><span class="favorite">☆</span><span class="game-art art-word">Aa</span><span class="download">↓</span><span class="game-name">Word Clash</span></button>
+          </section>
+
+          <section class="quick">
+            <button class="quick-card" type="button" onclick="showToast('Share link copied')"><b>Share Topya!</b><span>↗ <i>›</i></span></button>
+            <button class="quick-card community" type="button" onclick="showToast('Community panel opened')"><b>Join the Player Community</b><span>◉ <i>›</i></span></button>
+          </section>
+        </div>
+      </div>
+
+      <nav class="bottom-nav" aria-label="Main navigation">
+        <button class="nav-item active" type="button"><span class="nav-icon">⌂</span><span>Home</span></button>
+        <button class="nav-item" type="button" onclick="showToast('My Game')"><span class="nav-icon">▣</span><span>My Game</span></button>
+        <button class="nav-item" type="button" onclick="showToast('Online requires a network')"><span class="nav-icon">◈</span><span>Online</span></button>
+      </nav>
+      <span class="tap-cue" id="tapCue">Tap a game</span>
+
+      <div class="scrim" id="ratingScrim" role="dialog" aria-modal="true" aria-labelledby="ratingTitle">
+        <section class="rating-modal">
+          <button class="modal-close" type="button" aria-label="Close and continue" onclick="closeRatingPrompt()">×</button>
+
+          <div class="state active" id="ratingState">
+            <div class="modal-art" aria-hidden="true">☺</div>
+            <h2 id="ratingTitle">Enjoying Topya?</h2>
+            <p class="subtitle">Your feedback helps us make every game break even better.</p>
+            <div class="stars" role="radiogroup" aria-label="Choose a rating">
+              <button class="star" type="button" role="radio" aria-checked="false" aria-label="1 star" data-rating="1" onclick="selectRating(1)">★</button>
+              <button class="star" type="button" role="radio" aria-checked="false" aria-label="2 stars" data-rating="2" onclick="selectRating(2)">★</button>
+              <button class="star" type="button" role="radio" aria-checked="false" aria-label="3 stars" data-rating="3" onclick="selectRating(3)">★</button>
+              <button class="star" type="button" role="radio" aria-checked="false" aria-label="4 stars" data-rating="4" onclick="selectRating(4)">★</button>
+              <button class="star" type="button" role="radio" aria-checked="false" aria-label="5 stars" data-rating="5" onclick="selectRating(5)">★</button>
+            </div>
+            <p class="rating-hint" id="ratingHint">Tap a star to rate your experience</p>
+            <button class="primary-btn" id="submitRatingButton" type="button" onclick="submitRating()" disabled>Submit</button>
+            <button class="secondary-btn" type="button" onclick="closeRatingPrompt()">Maybe later</button>
+          </div>
+
+          <div class="state" id="telegramState">
+            <div class="guide-icon telegram" aria-hidden="true"><span class="paper-plane">➤</span></div>
+            <h2>Help us make Topya better</h2>
+            <p class="subtitle">Tell our team what did not feel right. We read every message.</p>
+            <span class="selected-score" id="telegramScore">★ 1–4 stars selected</span>
+            <div class="guide-note">Telegram will open in the app when installed, with the browser used as a fallback.</div>
+            <a class="link-btn" href="https://t.me/topyaofficial" target="_blank" rel="noopener" onclick="continueToGame('telegram')">Tell us on Telegram</a>
+            <button class="secondary-btn" type="button" onclick="continueToGame('later')">Not now</button>
+          </div>
+
+          <div class="state" id="storeState">
+            <div class="guide-icon store" aria-hidden="true"><span class="store-mark"></span></div>
+            <h2>Thanks for loving Topya!</h2>
+            <p class="subtitle">A quick rating on Google Play helps more players discover these games.</p>
+            <span class="selected-score">★★★★★ 5 stars</span>
+            <a class="link-btn" href="https://play.google.com/store/apps/details?id=com.amazing.minigames" target="_blank" rel="noopener" onclick="continueToGame('store')">Rate us on Google Play</a>
+            <button class="secondary-btn" type="button" onclick="continueToGame('later')">Not now</button>
+          </div>
+        </section>
+      </div>
+
+      <section class="launch-screen" id="launchScreen" aria-live="polite">
+        <div><div class="game-badge">▦</div><h2 id="launchTitle">Blocky Blast</h2><p>Offline game launched successfully</p><button type="button" onclick="resetDemo()">Back to Home</button></div>
+      </section>
+      <div class="toast" id="toast" role="status" aria-live="polite">Message</div>
+    </section>
+  </main>
+
+  <script>
+    var selectedRating = 0;
+    var selectedGame = "Blocky Blast";
+    var toastTimer;
+
+    function setState(id){
+      document.querySelectorAll(".rating-modal .state").forEach(function(node){node.classList.toggle("active",node.id===id);});
+    }
+
+    function openRatingPrompt(game){
+      selectedGame = game || "Blocky Blast";
+      selectedRating = 0;
+      setState("ratingState");
+      document.querySelectorAll(".star").forEach(function(star){star.classList.remove("active");star.setAttribute("aria-checked","false");});
+      document.getElementById("submitRatingButton").disabled = true;
+      document.getElementById("ratingHint").textContent = "Tap a star to rate your experience";
+      document.getElementById("tapCue").hidden = true;
+      document.getElementById("ratingScrim").classList.add("show");
+    }
+
+    function selectRating(value){
+      selectedRating = value;
+      var labels=["","We are sorry to hear that","Thanks for being honest","We appreciate your feedback","Glad you are enjoying it","Awesome — thank you!"];
+      document.querySelectorAll(".star").forEach(function(star,index){
+        var active=index<value;
+        star.classList.toggle("active",active);
+        star.setAttribute("aria-checked",String(index+1===value));
+      });
+      document.getElementById("ratingHint").textContent=labels[value];
+      document.getElementById("submitRatingButton").disabled=false;
+    }
+
+    function submitRating(){
+      if(!selectedRating){return;}
+      if(selectedRating<=4){showTelegramGuide();}else{showStoreGuide();}
+    }
+
+    function showTelegramGuide(){
+      document.getElementById("telegramScore").textContent="★ "+selectedRating+" star"+(selectedRating===1?"":"s")+" selected";
+      setState("telegramState");
+    }
+
+    function showStoreGuide(){setState("storeState");}
+
+    function closeRatingPrompt(){
+      document.getElementById("ratingScrim").classList.remove("show");
+      showToast("Reminder snoozed for 14 days · Starting game");
+      window.setTimeout(launchSelectedGame,650);
+    }
+
+    function continueToGame(source){
+      document.getElementById("ratingScrim").classList.remove("show");
+      if(source==="telegram"){showToast("Opening Telegram · Feedback cooldown 30 days");}
+      if(source==="store"){showToast("Opening Google Play · Rating cooldown 180 days");}
+      if(source==="later"){showToast("Starting your game");}
+      window.setTimeout(launchSelectedGame,700);
+    }
+
+    function launchSelectedGame(){
+      document.getElementById("launchTitle").textContent=selectedGame;
+      document.getElementById("launchScreen").classList.add("show");
+    }
+
+    function showToast(message){
+      var toast=document.getElementById("toast");
+      window.clearTimeout(toastTimer);
+      toast.textContent=message;
+      toast.classList.add("show");
+      toastTimer=window.setTimeout(function(){toast.classList.remove("show");},2200);
+    }
+
+    function resetDemo(){
+      selectedRating=0;
+      selectedGame="Blocky Blast";
+      document.getElementById("ratingScrim").classList.remove("show");
+      document.getElementById("launchScreen").classList.remove("show");
+      document.getElementById("tapCue").hidden=false;
+      document.getElementById("homeScreen").scrollTop=0;
+      setState("ratingState");
+      showToast("Demo reset — tap a game");
+    }
+
+    document.querySelectorAll(".game-trigger").forEach(function(card){
+      card.addEventListener("click",function(){openRatingPrompt(card.getAttribute("data-game"));});
+    });
+    document.getElementById("ratingScrim").addEventListener("click",function(event){if(event.target===this){closeRatingPrompt();}});
+    document.addEventListener("keydown",function(event){if(event.key==="Escape"&&document.getElementById("ratingScrim").classList.contains("show")){closeRatingPrompt();}});
+  </script>
+</body>
+</html>
