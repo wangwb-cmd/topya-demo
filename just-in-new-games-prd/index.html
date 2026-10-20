@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JUST IN 新游戏推荐 · 产品需求文档</title></head><body><main id="prdContent">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f5fa;color:#28263b;font:14px/1.7 "Microsoft YaHei",sans-serif}#prdContent{max-width:1100px;margin:24px auto;padding:36px;background:white;border-radius:16px;box-shadow:0 12px 34px #23204112}.doc-title{font-size:29px;line-height:1.25;margin:0}.doc-sub,.source-note,.asset-note{color:#686681}.source-note{background:#faf9ff;padding:10px 14px;border-left:3px solid #8873d5}h2{font-size:20px;border-bottom:1px solid #e4e0f0;padding-bottom:8px;margin-top:37px}h3{font-size:16px;margin-top:25px}table{border-collapse:collapse;width:100%;margin:13px 0 23px;table-layout:fixed}th,td{border:1px solid #ddd9e9;text-align:left;vertical-align:top;padding:9px 10px;overflow-wrap:anywhere}th{background:#f1eefb;color:#332963}.meta-table td:first-child{width:160px;background:#faf9ff;font-weight:bold}.scope-card,.risk-card{padding:12px 18px;border-radius:10px;margin:12px 0}.scope-card{background:#f0f9f3}.risk-card{background:#fff8ec}.scope-card ul,.risk-card ul{margin:5px 0 0;padding-left:20px}.goal-table th,.goal-table td{font-size:12px}.rule-table td:first-child{width:25%;font-weight:bold}.scheme-table .c-mod{width:12%}.scheme-table .c-fn{width:13%}.scheme-table .c-proto{width:29%}.scheme-table td{font-size:12px}.desc-block{margin-bottom:13px}.desc-block b{color:#493c80}.desc-block p{margin:5px 0}.scheme-table .proto a{display:block;margin-bottom:8px}.prototype-frame{height:365px;overflow:hidden;border:1px solid #ddd9e9;border-radius:10px;background:#171923}.prototype-iframe{display:block;width:754px;height:844px;border:0;transform:scale(.42);transform-origin:0 0}.pending{background:#faf9ff;border-radius:12px;padding:12px 22px}@media(max-width:700px){#prdContent{margin:0;padding:18px;border-radius:0}table{display:block;overflow-x:auto;white-space:normal}.scheme-table{min-width:800px}}
+</style>
+<h1 class="doc-title">JUST IN 新游戏推荐 · 产品需求文档（PRD）</h1>
+<h2>一、需求概述（功能清单）</h2>
+<div class="scope-card"><b>本期范围</b><ol style="margin:5px 0 0;padding-left:24px">
+<li>Remote Config 新增 JUST IN 标签，每次上线的 2 款新游戏均配置为 JUST IN。</li>
+<li>命中 JUST IN 的游戏无论是否下载成功，都显示 JUST IN 标签；未就绪时按 Remote Config 默认顺序展示，下载成功后置顶。</li>
+<li>JUST IN 游戏优先预加载，进入优先下载队列。</li>
+<li>玩家下一次自然进入首页时，先判断是否有其他弹窗需要展示；没有时，再判断 JUST IN 游戏是否已就绪并置顶、该游戏引导是否从未弹过，全部满足才弹出引导。</li>
+</ol></div>
+<table class="overview-table"><thead><tr><th>模块</th><th>一级功能</th><th>说明</th></tr></thead><tbody>
+<tr><td>1</td><td>JUST IN 配置</td><td>每次上线的 2 款新游戏均配置为 JUST IN。</td></tr>
+<tr><td>2</td><td>标签与排序</td><td>命中配置即显示 JUST IN；未就绪保持默认位置，已就绪置顶。</td></tr>
+<tr><td>3</td><td>优先预加载</td><td>JUST IN 游戏优先预加载，进入优先下载队列，满足既有门槛后下载。</td></tr>
+<tr><td>4</td><td>首次首页引导</td><td>自然进入首页先检查其他弹窗；无其他弹窗时，JUST IN 游戏已置顶、已就绪且引导未弹过才展示。</td></tr>
+</tbody></table>
+<h3>1.1 状态、标签与排序规则</h3>
+<table class="rule-table"><thead><tr><th>条件</th><th>展示与排序</th><th>说明</th></tr></thead><tbody>
+<tr><td>未命中 JUST IN</td><td>沿用现有标签和 Remote Config 默认顺序</td><td>本需求不覆盖普通游戏展示逻辑。</td></tr>
+<tr><td>命中 JUST IN，未就绪</td><td>显示 JUST IN；仍按 Remote Config 默认顺序</td><td>待下载、下载中、暂停、下载失败都属于未就绪。</td></tr>
+<tr><td>命中 JUST IN，已就绪</td><td>显示 JUST IN；置于普通游戏之前</td><td>就绪指下载成功。</td></tr>
+<tr><td>多个已就绪 JUST IN</td><td>在置顶区域按 Remote Config 原相对顺序排列</td><td>同一顺序值时保持配置返回顺序，避免刷新抖动。</td></tr>
+<tr><td>资源被删除或配置移除</td><td>资源被删除时保留 JUST IN 标签，游戏变为非置顶并恢复默认位置，需要重新下载；配置移除走普通逻辑</td><td>资源被删除后，游戏变为非置顶，游戏需要重新下载。</td></tr>
+</tbody></table>
+<h3>1.2 下载与弹窗规则</h3>
+<table class="rule-table"><thead><tr><th>规则</th><th>产品口径</th><th>边界</th></tr></thead><tbody>
+<tr><td>预加载优先级</td><td>JUST IN 候选先于普通后台预加载；候选之间按 Remote Config 顺序。</td><td>遵守现有网络、电量、空间和并发门槛；不打断用户主动下载或正在运行的游戏。</td></tr>
+<tr><td>进入首页判断顺序</td><td>下一次自然进入首页时，先检查是否有其他弹窗需要展示；有则不弹 JUST IN 引导。没有其他弹窗时，再检查 JUST IN 游戏是否已置顶、资源已就绪、该游戏引导从未弹过；三个条件全部满足才展示。</td><td>同一次停留首页期间下载刚成功，不突然插入引导弹窗。</td></tr>
+<tr><td>弹窗优先级</td><td>JUST IN 引导弹窗优先级最低；任何其他弹窗需要展示时，先展示其他弹窗，本次不弹 JUST IN 引导。</td><td>本次不记录为已展示；其他弹窗结束后不在当前首页停留中补弹，下一次自然进入首页再判断。</td></tr>
+<tr><td>去重对象</td><td>引导弹窗实际展示时，按游戏 ID 在本地记录已展示。</td><td>卸载重装或更换设备后都要重新弹出；弹窗记录只保存在本地。</td></tr>
+<tr><td>多个候选</td><td>单次首页进入只弹一款，优先 Remote Config 顺序靠前且从未引导的已就绪游戏。</td><td>其他已就绪游戏仍置顶；下次自然进入首页可引导下一款。</td></tr>
+</tbody></table>
+<h2>二、详细方案</h2>
+<table class="scheme-table"><colgroup><col class="c-mod"><col class="c-fn"><col class="c-proto"><col></colgroup><thead><tr><th>一级模块</th><th>二级功能</th><th>原型</th><th>描述</th></tr></thead><tbody>
+<tr><td class="mod" rowspan="2">1<br>首页游戏列表</td><td class="fn">1.1 未就绪状态</td><td class="proto"><a href="../just-in-new-games-prototype/">打开交互原型 · 默认状态</a><div class="prototype-frame"><iframe class="prototype-iframe" loading="lazy" title="未就绪状态原型" src="../just-in-new-games-prototype/"></iframe></div></td><td class="desc"><div class="desc-block"><b>【页面元素】</b><p>1、JUST IN 游戏显示 JUST IN 标签；未就绪时保持 Remote Config 默认排序。</p></div><div class="desc-block"><b>【交互说明】</b><p>1、Remote Config 新增 JUST IN 标签；每次上线的 2 款新游戏均配置为 JUST IN。</p><p>2、JUST IN 游戏加入优先预加载队列，优先下载。</p></div><div class="desc-block"><b>【边界说明】</b><p>1、资源被删除后，游戏保持非置顶并需要重新下载；仍显示 JUST IN 标签，按默认排序重新进入优先预加载队列。</p></div></td></tr>
+<tr><td class="fn">1.2 已就绪状态</td><td class="proto"><a href="../just-in-new-games-prototype/">打开交互原型 · 点击“模拟下载成功”</a><div class="prototype-frame"><iframe class="prototype-iframe" loading="lazy" title="已就绪状态原型" src="../just-in-new-games-prototype/"></iframe></div></td><td class="desc"><div class="desc-block"><b>【页面元素】</b><p>1、JUST IN 游戏显示 JUST IN 标签，并在首页置顶。</p></div><div class="desc-block"><b>【交互说明】</b><p>1、游戏下载成功后，从 Remote Config 默认位置移至置顶位置。</p></div><div class="desc-block"><b>【边界说明】</b><p>1、资源被删除后，游戏变为非置顶并需要重新下载；保留 JUST IN 标签，恢复默认排序并重新进入优先预加载队列。</p></div></td></tr>
+<tr><td class="mod">2<br>首次引导</td><td class="fn">2.1 首页弹窗</td><td class="proto"><a href="../just-in-new-games-prototype/">打开交互原型 · 点击“查看首次引导弹窗”</a><div class="prototype-frame"><iframe class="prototype-iframe" loading="lazy" title="首次引导弹窗原型" src="../just-in-new-games-prototype/"></iframe></div></td><td class="desc"><div class="desc-block"><b>【页面元素】</b><p>1、弹窗显示 JUST IN 标记，主标题“新游戏刚上线啦！”，副标题“全新乐趣，等你体验！”。</p></div><div class="desc-block"><b>【交互说明】</b><p>1、下一次自然进入首页时，先判断是否有其他弹窗需要展示。</p><p>2、没有其他弹窗时，判断 JUST IN 游戏是否已置顶、已就绪，并且该游戏引导从未弹过；全部满足才展示引导。</p></div><div class="desc-block"><b>【边界说明】</b><p>1、本弹窗优先级最低；有其他弹窗时本次不弹，下一次自然进入首页再判断。</p><p>2、本设备保留该游戏弹窗记录时不重复弹出；卸载重装或更换设备后重新弹出。</p></div></td></tr>
+</tbody></table>
+</main></body></html>
