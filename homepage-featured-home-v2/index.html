@@ -21,7 +21,7 @@
 </main>
 <script>
 const games=[{id:59,name:'Water Sort'},{id:9,name:'Blocky Blast Puzzle'},{id:34,name:'Arrow Puzzle'},{id:60,name:'Ceramic Tile'},{id:23,name:'Mini Relaxing Game'},{id:33,name:'Jewel Coloring'},{id:30,name:'Sort Puzzle Nuts and Bolts'},{id:16,name:'Merge Summer'}];
-const recommendations=[{game:games[0],tag:'JUST IN',kind:''},{game:games[1],tag:'热门',kind:'hot'},{game:games[2],tag:'轮换',kind:'rotate'},{game:games[3],tag:'JUST IN',kind:''},{game:games[4],tag:'热门',kind:'hot'},{game:games[5],tag:'轮换',kind:'rotate'}];
+const recommendations=[{game:games[0],tag:'JUST IN',kind:''},{game:games[1],tag:'Most',kind:'hot'},{game:games[2],tag:'New',kind:'rotate'},{game:games[3],tag:'JUST IN',kind:''},{game:games[4],tag:'Most',kind:'hot'},{game:games[5],tag:'New',kind:'rotate'}];
 let count=6,age='ready',page='home';
 const screen=document.getElementById('screen');
 function card(game,tag='',kind=''){return `<button class="game" data-game="${game.id}"><span class="cover"><img src="covers/${game.id}.jpg" alt=""><span class="tag ${kind}" ${tag?'':'hidden'}>${tag}</span></span><b>${game.name}</b></button>`}
@@ -32,7 +32,7 @@ function render(){
   html+='<div class="section"><h2>最近进行</h2></div><div class="grid">'+card(games[6])+'</div>';
   if(age==='ready'&&count>0){html+='<div class="section"><h2>为你推荐</h2></div><div class="grid">'+recommendations.slice(0,count).map(item=>card(item.game,item.tag,item.kind)).join('')+'</div>'}
  }
- html+='<div class="section"><h2>'+(page==='home'?'全部游戏':'我的游戏')+'</h2></div><div class="grid library-grid">'+[games[6],games[7],games[1],games[2],games[4],games[5],games[0],games[3]].map(g=>card(g)).join('')+'</div>';
+ html+='<div class="section"><h2>'+(page==='home'?'全部游戏':'我的游戏')+'</h2></div><div class="grid library-grid">'+[games[6],games[7],games[1],games[2],games[4],games[5],games[0],games[3]].map(g=>{const item=recommendations.find(r=>r.game.id===g.id);return card(g,item?.tag||'',item?.kind||'')}).join('')+'</div>';
  screen.innerHTML=html;screen.scrollTop=0;screen.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>{window.currentGame=Number(b.dataset.game);page='play';render()});
  document.getElementById('home').classList.toggle('active',page==='home');document.getElementById('library').classList.toggle('active',page==='library');
 }
