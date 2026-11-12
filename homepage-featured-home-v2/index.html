@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>首页固定推荐位 · 首页效果</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10131a;color:#f4f6f7;font:14px/1.45 "Microsoft YaHei",sans-serif}button{font:inherit;cursor:pointer}button:focus-visible{outline:2px solid #f5ca42;outline-offset:3px}.workspace{max-width:900px;margin:auto;padding:28px;display:flex;justify-content:center;align-items:flex-start;gap:28px}.phone{width:390px;max-width:100%;height:min(800px,90vh);min-height:600px;border:6px solid #3a424d;border-radius:32px;background:#141820;overflow:hidden;position:relative;flex-shrink:0}.screen{height:100%;overflow:auto;padding:20px 16px 85px}.brand{font-size:22px;font-weight:900;margin:0 0 22px}.brand em{font-style:normal;color:#f5ca42}.section{margin:22px 0 10px;display:flex;align-items:center;justify-content:space-between}.section h2{font-size:17px;margin:0}.section small{color:#a8b2bc}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 10px}.game{padding:0;border:0;background:none;color:inherit;text-align:left;min-width:0}.cover{display:block;aspect-ratio:1;position:relative;overflow:hidden;border-radius:7px;background:#29303a}.cover img{display:block;width:100%;height:100%;object-fit:cover}.tag{position:absolute;left:5px;top:5px;background:#f5ca42;color:#1e221b;font-size:9px;font-weight:800;padding:3px 5px;border-radius:3px}.tag.hot{background:#ea765d;color:#fff}.tag.rotate{background:#74c79a;color:#11251c}.game b{display:block;margin:6px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}.placeholder{aspect-ratio:1}.nav{position:absolute;bottom:0;left:0;right:0;height:62px;background:#1c222b;border-top:1px solid #343c48;display:flex}.nav button{flex:1;background:none;border:0;color:#a8b2bc}.nav .active{color:#f5ca42}.controls{width:300px;background:#1b2029;border:1px solid #343c48;padding:22px;border-radius:7px}.controls h1{font-size:19px;margin:0 0 16px}.controls h2{font-size:13px;margin:20px 0 8px;color:#d7dee4}.choices{display:flex;flex-wrap:wrap;gap:7px}.choices button,.back{min-height:40px;padding:8px 12px;border:1px solid #59616b;background:#2a323d;color:#f4f6f7;border-radius:5px}.choices button.active,.back{background:#f5ca42;border-color:#f5ca42;color:#172018;font-weight:700}.play{text-align:center;padding-top:55px}.play img{width:190px;max-width:80%;aspect-ratio:1;object-fit:cover;border-radius:8px}.play h2{font-size:20px}.play p{color:#a8b2bc}.back{margin-top:15px}.muted{color:#a8b2bc;font-size:12px;line-height:1.7}.screen::-webkit-scrollbar{width:4px}.screen::-webkit-scrollbar-thumb{background:#49515e;border-radius:4px}@media(max-width:760px){.workspace{padding:12px;display:flex;flex-direction:column;align-items:center;gap:14px}.phone{height:740px;max-height:85vh;min-height:500px}.controls{width:min(390px,100%)} }@media(max-width:380px){.screen{padding-left:12px;padding-right:12px}.tag{font-size:8px;padding:2px 4px}.grid{gap:14px 8px}}
+.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+</style>
+</head>
+<body>
+<main class="workspace">
+  <section class="phone" aria-label="手机首页"><div class="screen" id="screen"></div><nav class="nav"><button class="active" id="home">首页</button><button id="library">我的游戏</button></nav></section>
+  <aside class="controls" aria-label="场景切换">
+    <h1>首页推荐 · 效果预览</h1>
+    <h2>可展示推荐游戏</h2><div class="choices" id="counts"><button data-count="6" class="active">6 个</button><button data-count="1">1 个</button><button data-count="0">0 个</button></div>
+    <h2>安装时间</h2><div class="choices" id="ages"><button data-age="ready" class="active">满 24 小时</button><button data-age="new">未满 24 小时</button></div>
+    <p class="muted">切换场景可查看推荐区的展示效果。点击游戏卡片可预览进入与返回。</p>
+  </aside>
+</main>
+<script>
+const games=[{id:59,name:'Water Sort'},{id:9,name:'Blocky Blast Puzzle'},{id:34,name:'Arrow Puzzle'},{id:60,name:'Ceramic Tile'},{id:23,name:'Mini Relaxing Game'},{id:33,name:'Jewel Coloring'},{id:30,name:'Sort Puzzle Nuts and Bolts'},{id:16,name:'Merge Summer'}];
+const recommendations=[{game:games[0],tag:'JUST IN',kind:''},{game:games[1],tag:'热门',kind:'hot'},{game:games[2],tag:'轮换',kind:'rotate'},{game:games[3],tag:'JUST IN',kind:''},{game:games[4],tag:'热门',kind:'hot'},{game:games[5],tag:'轮换',kind:'rotate'}];
+let count=6,age='ready',page='home';
+const screen=document.getElementById('screen');
+function card(game,tag='',kind=''){return `<button class="game" data-game="${game.id}"><span class="cover"><img src="covers/${game.id}.jpg" alt=""><span class="tag ${kind}" ${tag?'':'hidden'}>${tag}</span></span><b>${game.name}</b></button>`}
+function render(){
+ if(page==='play'){const g=games.find(x=>x.id===window.currentGame);screen.innerHTML=`<div class="play"><img src="covers/${g.id}.jpg" alt=""><h2>${g.name}</h2><p>游戏画面预览</p><button class="back" id="back">返回首页</button></div>`;document.getElementById('back').onclick=()=>{page='home';render()};return}
+ let html='<div class="brand">TOP<em>YA!</em></div>';
+ if(page==='home'){
+  html+='<div class="section"><h2>最近进行</h2></div><div class="grid">'+card(games[6])+'</div>';
+  if(age==='ready'&&count>0){html+='<div class="section"><h2>为你推荐</h2></div><div class="grid">'+recommendations.slice(0,count).map(item=>card(item.game,item.tag,item.kind)).join('')+'</div>'}
+ }
+ html+='<div class="section"><h2>'+(page==='home'?'全部游戏':'我的游戏')+'</h2></div><div class="grid library-grid">'+[games[6],games[7],games[1],games[2],games[4],games[5],games[0],games[3]].map(g=>card(g)).join('')+'</div>';
+ screen.innerHTML=html;screen.scrollTop=0;screen.querySelectorAll('[data-game]').forEach(b=>b.onclick=()=>{window.currentGame=Number(b.dataset.game);page='play';render()});
+ document.getElementById('home').classList.toggle('active',page==='home');document.getElementById('library').classList.toggle('active',page==='library');
+}
+document.getElementById('counts').onclick=e=>{if(!e.target.dataset.count)return;count=Number(e.target.dataset.count);document.querySelectorAll('#counts button').forEach(b=>b.classList.toggle('active',b===e.target));page='home';render()};
+document.getElementById('ages').onclick=e=>{if(!e.target.dataset.age)return;age=e.target.dataset.age;document.querySelectorAll('#ages button').forEach(b=>b.classList.toggle('active',b===e.target));page='home';render()};
+document.getElementById('home').onclick=()=>{page='home';render()};document.getElementById('library').onclick=()=>{page='library';render()};render();
+</script>
+</body>
+</html>
