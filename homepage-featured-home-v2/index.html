@@ -21,7 +21,7 @@
 </main>
 <script>
 const games=[{id:59,name:'Water Sort'},{id:9,name:'Blocky Blast Puzzle'},{id:34,name:'Arrow Puzzle'},{id:60,name:'Ceramic Tile'},{id:23,name:'Mini Relaxing Game'},{id:33,name:'Jewel Coloring'},{id:30,name:'Sort Puzzle Nuts and Bolts'},{id:16,name:'Merge Summer'}];
-const recommendations=[{game:games[0],tag:'JUST IN',kind:''},{game:games[1],tag:'Most',kind:'hot'},{game:games[2],tag:'New',kind:'rotate'},{game:games[3],tag:'JUST IN',kind:''},{game:games[4],tag:'Most',kind:'hot'},{game:games[5],tag:'New',kind:'rotate'}];
+const recommendations=[{game:games[0],tag:'JUST IN',kind:''},{game:games[3],tag:'JUST IN',kind:''},{game:games[1],tag:'Most',kind:'hot'},{game:games[4],tag:'Most',kind:'hot'},{game:games[2],tag:'New',kind:'rotate'},{game:games[5],tag:'New',kind:'rotate'}];
 let count=6,age='ready',page='home';
 const screen=document.getElementById('screen');
 function card(game,tag='',kind=''){return `<button class="game" data-game="${game.id}"><span class="cover"><img src="covers/${game.id}.jpg" alt=""><span class="tag ${kind}" ${tag?'':'hidden'}>${tag}</span></span><b>${game.name}</b></button>`}
